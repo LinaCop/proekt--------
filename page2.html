@@ -8,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
-</head>
+
+<link rel="stylesheet" href="page2.css" /></head>
 <body>
     <!-- Левое меню -->
     <nav class="side-menu" id="sideMenu">
@@ -57,63 +58,27 @@
                         </div>
                     </div>
                     <div class="doc-actions">
-                        <button class="view-btn" data-doc="mintrud.rtf">Просмотреть</button>
-                        <button class="download-btn">Скачать docx</button>
-                    </div>
-                </div>
+                        <div class="r-actions">
+                            <a class="r-btn r-btn--primary js-pdf-view"
+                            data-pdf="doc/mintrud.pdf"
+                            target="_blank"
+                            rel="noopener">
+                            Просмотреть PDF
+                            </a>
 
-                <!-- Документ 2 -->
-                <div class="doc-card">
-                    <div class="doc-icon">📄</div>
-                    <div class="doc-info">
-                        <h3 class="doc-title">Федеральный закон "О специальной оценке условий труда"</h3>
-                        <p class="doc-desc">Регулирование проведения специальной оценки условий труда</p>
-                        <div class="doc-meta">
-                            <span class="doc-size">Размер: 0.8 MB</span>
-                            <span class="doc-date">Обновлен: 2024-01-10</span>
+                        <a class="r-btn r-btn--ghost js-pdf-download"
+                        data-pdf="doc/mintrud.pdf"
+                        data-name="Приказ_Минтруда_767Н.pdf"
+                        href="#">
+                        Скачать PDF
+                        </a>
+
                         </div>
-                    </div>
-                    <div class="doc-actions">
-                        <button class="view-btn" data-doc="sout-law">Просмотреть</button>
-                        <button class="download-btn">Скачать PDF</button>
+
                     </div>
                 </div>
 
-                <!-- Документ 3 -->
-                <div class="doc-card">
-                    <div class="doc-icon">📄</div>
-                    <div class="doc-info">
-                        <h3 class="doc-title">Приказ Минтруда №187н "О формах документов по охране труда"</h3>
-                        <p class="doc-desc">Утверждение форм документов, необходимых для соблюдения требований охраны труда</p>
-                        <div class="doc-meta">
-                            <span class="doc-size">Размер: 1.5 MB</span>
-                            <span class="doc-date">Обновлен: 2024-01-08</span>
-                        </div>
-                    </div>
-                    <div class="doc-actions">
-                        <button class="view-btn" data-doc="prikaz-187">Просмотреть</button>
-                        <button class="download-btn">Скачать PDF</button>
-                    </div>
-                </div>
-
-                <!-- Документ 4 -->
-                <div class="doc-card">
-                    <div class="doc-icon">📄</div>
-                    <div class="doc-info">
-                        <h3 class="doc-title">Правила по охране труда при работе на высоте</h3>
-                        <p class="doc-desc">Требования безопасности при выполнении работ на высоте</p>
-                        <div class="doc-meta">
-                            <span class="doc-size">Размер: 2.1 MB</span>
-                            <span class="doc-date">Обновлен: 2024-01-05</span>
-                        </div>
-                    </div>
-                    <div class="doc-actions">
-                        <button class="view-btn" data-doc="height-rules">Просмотреть</button>
-                        <button class="download-btn">Скачать PDF</button>
-                    </div>
-                </div>
-            </div>
-
+             
             <!-- Область просмотра документа -->
             <div class="doc-viewer" id="docViewer">
                 <div class="viewer-header">
@@ -141,98 +106,9 @@
     </div>
 
     <script src="script.js"></script>
-    <script>
-        // Скрипт для работы с документами
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButtons = document.querySelectorAll('.view-btn');
-            const closeViewer = document.getElementById('closeViewer');
-            const docViewer = document.getElementById('docViewer');
-            const viewerContent = document.getElementById('viewerContent');
-            const viewerTitle = document.getElementById('viewerTitle');
-            const searchInput = document.querySelector('.search-input');
-
-            // Данные документов (в реальном приложении будут с сервера)
-            const documentsData = {
-                'trudovoy-kodeks': {
-                    title: 'Трудовой кодекс РФ',
-                    content: `
-                        <h4>Раздел I. Общие положения</h4>
-                        <p>Статья 1. Цели и задачи трудового законодательства</p>
-                        <p>Целями трудового законодательства являются установление государственных гарантий трудовых прав и свобод граждан...</p>
-                        <h4>Раздел II. Социальное партнерство в сфере труда</h4>
-                        <p>Статья 23. Понятие социального партнерства в сфере труда</p>
-                        <p>Социальное партнерство - система взаимоотношений между работниками, работодателями...</p>
-                    `
-                },
-                'sout-law': {
-                    title: 'Федеральный закон "О специальной оценке условий труда"',
-                    content: `
-                        <h4>Глава 1. Общие положения</h4>
-                        <p>Статья 1. Предмет регулирования настоящего Федерального закона</p>
-                        <p>Настоящий Федеральный закон регулирует отношения, возникающие в связи с проведением специальной оценки условий труда...</p>
-                    `
-                },
-                'prikaz-187': {
-                    title: 'Приказ Минтруда №187н',
-                    content: `
-                        <h4>Об утверждении форм документов</h4>
-                        <p>В соответствии с частью 8 статьи 15 Федерального закона от 28 декабря 2013 г. № 426-ФЗ...</p>
-                    `
-                },
-                'height-rules': {
-                    title: 'Правила по охране труда при работе на высоте',
-                    content: `
-                        <h4>I. Общие требования</h4>
-                        <p>1. Правила по охране труда при работе на высоте устанавливают государственные нормативные требования охраны труда...</p>
-                    `
-                }
-            };
-
-            // Открытие просмотра документа
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const docId = this.getAttribute('data-doc');
-                    const docData = documentsData[docId];
-                    
-                    if (docData) {
-                        viewerTitle.textContent = docData.title;
-                        viewerContent.innerHTML = docData.content;
-                        docViewer.style.display = 'block';
-                    }
-                });
-            });
-
-            // Закрытие просмотра
-            closeViewer.addEventListener('click', function() {
-                docViewer.style.display = 'none';
-            });
-
-            // Поиск документов
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const docCards = document.querySelectorAll('.doc-card');
-                
-                docCards.forEach(card => {
-                    const title = card.querySelector('.doc-title').textContent.toLowerCase();
-                    const desc = card.querySelector('.doc-desc').textContent.toLowerCase();
-                    
-                    if (title.includes(searchTerm) || desc.includes(searchTerm)) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-
-            // Скачивание документа
-            document.querySelectorAll('.download-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const docTitle = this.closest('.doc-card').querySelector('.doc-title').textContent;
-                    alert(`Начинается скачивание документа: ${docTitle}`);
-                    // В реальном приложении здесь будет ссылка на файл
-                });
-            });
-        });
-    </script>
+ 
+       
+ <!-- связка -->
+      <script src="page2.js"></script>
 </body>
 </html>
