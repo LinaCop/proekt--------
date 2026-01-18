@@ -231,6 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <input type="checkbox"
                            class="js-item-check"
                            data-item-key="${esc(itemKey)}"
+                           data-item-id="${esc(it.itemId || '')}"
                            data-type-key="${esc(typeKey)}">
                     <span class="siz-item__name">${esc(it.name || '')}</span>
                   </label>

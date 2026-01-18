@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Результаты СИЗ</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Результаты теста СИЗ</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="result.css" />
 </head>
 <body>
 
-<div class="page result-page">
-    <h1 class="test-title">Результаты</h1>
+  <!-- меню/шапку можешь оставить как на page1.html,
+       тут минимальный контейнер результата -->
+  <div class="page">
+    <div class="test-page">
+      <div id="resultContainer"></div>
+    </div>
+  </div>
 
-    <div id="resultBox" class="result-box"></div>
+  <!-- 💾 Данные (важно: чтобы result.js мог взять норму из SIZ_DATA) -->
+  <script src="professions.js"></script>
+  <script src="siz_100001.js"></script>
+  <script src="siz_100003.js"></script>
+  <script src="siz_10010.js"></script>
 
-    <a href="index.html" class="hero-button" style="margin-top:20px; display:inline-block;">
-        Вернуться на главную страницу
-    </a>
-</div>
-
-<!-- Данные -->
-<script src="professions.js"></script>
-<script src="siz_100001.js"></script>
-<script src="siz_100003.js"></script>
-<script src="siz_10010.js"></script>
-
-<!-- Логика -->
-<script src="result.js"></script>
-
+  <!-- ⚙️ Логика -->
+  <script src="result.js"></script>
 </body>
 </html>
+
 
