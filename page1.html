@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест СИЗ</title>
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+<!-- менюшка слева -->
+<nav class="side-menu" id="sideMenu">
+    <div class="side-menu__header">Меню</div>
+    <a href="index.html" class="side-menu__item side-menu__item--active">Главная</a>
+    <a href="page1.html" class="side-menu__item">Пройти тест</a>
+    <a href="page2.html" class="side-menu__item">Нормативная документация</a>
+    <a href="#" class="side-menu__item">Контакты</a>
+
+    <div class="side-menu__footer">
+        © 2025<br>
+        ПрофЗдоровье
+    </div>
+</nav>
+
+<div class="page">
+    <!-- верх -->
+    <div class="top-row">
+        <div class="burger" id="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+
+        <div class="site-title">Твое профессиональное здоровье РФ</div>
+    </div>
+
+    <div class="divider"></div>
+<!-- // менюшка слева закончилась // -->
+<div class="page test-page">
+    <h1 class="test-title">Подбор средств индивидуальной защиты</h1>
+
+    <!-- Добавляем поисковую строку -->
+    <div class="search-container">
+        <label class="test-label">Поиск профессии:</label>
+        <input type="text" id="professionSearch" class="search-input" placeholder="Введите название профессии...">
+    </div>
+
+    <label class="test-label">Выберите профессию:</label>
+    <select id="professionSelect" class="test-select">
+        <option value="">-- Выберите --</option>
+    </select>
+
+    <div id="profInfo" class="prof-info">
+        <p class="prof-text">
+            Выберите профессию, и мы покажем обязательные СИЗ согласно закону.
+        </p>
+    </div>
+    
+    <form id="testForm" class="test-form" style="display: none;">
+        <h2 class="test-subtitle">Отметьте имеющиеся СИЗ:</h2>
+        <div id="sizList" class="siz-list"></div>
+
+        <button type="submit" class="hero-button" style="margin-top:20px;">
+            Отправить
+        </button>
+    </form>
+</div>
+
+<!-- 💾 Данные -->
+<script src="professions.js"></script>
+<script src="siz_100001.js"></script>
+<script src="siz_100003.js"></script>
+<script src="siz_10010.js"></script>
+
+<!-- ⚙️ Логика -->
+<script src="page1.js"></script>
+
+<script>
+// Добавляем функциональность поиска
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('professionSearch');
+    const professionSelect = document.getElementById('professionSelect');
+    
+    // Функция для фильтрации профессий
+    function filterProfessions(searchText) {
+        const options = professionSelect.options;
+        searchText = searchText.toLowerCase();
+        
+        for (let i = 0; i < options.length; i++) {
+            const option = options[i];
+            const text = option.textContent.toLowerCase();
+            
+            if (option.value === "") {
+                option.style.display = ""; // Всегда показывать опцию "-- Выберите --"
+                continue;
+            }
+            
+            if (text.includes(searchText)) {
+                option.style.display = "";
+            } else {
+                option.style.display = "none";
+            }
+        }
+    }
+    
+    // Обработчик ввода в поисковую строку
+    searchInput.addEventListener('input', function() {
+        filterProfessions(this.value);
+    });
+    
+    // Обработчик изменения выбора в select
+    professionSelect.addEventListener('change', function() {
+        // Можно также очищать поиск при выборе профессии, если нужно:
+        // searchInput.value = '';
+        // filterProfessions('');
+    });
+});
+</script>
+
+</body>
+</html>
+

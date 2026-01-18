@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Название проекта</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+<nav class="side-menu" id="sideMenu">
+    <div class="side-menu__header">Меню</div>
+    <a href="index.html" class="side-menu__item side-menu__item--active">Главная</a>
+    <a href="page1.html" class="side-menu__item">Пройти тест</a>
+    <a href="page2.html" class="side-menu__item">Нормативная документация</a>
+    <a href="#" class="side-menu__item">Контакты</a>
+
+    <div class="side-menu__footer">
+        © 2025<br>
+        ПрофЗдоровье
+    </div>
+</nav>
+
+<div class="page">
+    <!-- верх -->
+    <div class="top-row">
+        <div class="burger" id="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- <div class="logo"> -->
+            <img src="images/Logo.png">
+        <!-- </div> -->
+
+        <div class="site-title">Твое профессиональное здоровье РФ</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- выпадающее меню, открывается по бургеру -->
+   <!-- левое выдвигающееся меню -->
+
+
+
+    <!-- баннер -->
+    <section class="hero">
+        <div class="hero-text">
+            <h2 class="hero-title">Системный подхoд к вашему благополучию</h2>
+            <p class="hero-p">
+                Проверьте ваши трудовые гарантии и узнайте полезную информацию: проверка обеспечения СИЗ по приказам Минтруда и рекомендации по лечебно-профилактическому питанию
+            </p>
+            <button class="hero-button" id="heroButton" onclick="window.location.href='page1.html'" >Узнать сейчас</button>
+        </div>
+        <div class="hero-image">
+            <i></i>
+        </div>
+    </section>
+
+    <!-- четыре текста -->
+    <div class="tabs">
+        <div class="tabs-item">Проверь положенные СИЗ</div>
+        <div class="tabs-item">Узнай рекомендации по питанию</div>
+        <div class="tabs-item">Прочти нормативную документацию</div>
+        <div class="tabs-item">Ознакомься с интересной и информацией</div>
+    </div>
+
+    <!-- статьи -->
+    <section class="articles">
+        <div class="article">статья</div>
+        <div class="article">статья</div>
+    </section>
+
+    <!-- подвал -->
+    <footer>
+        <div class="footer-left">
+            ПрофЗдоровье<br>
+            Почта для связи: proekt_siz@mail.ru
+        </div>
+        <div class="footer-right">
+            <a href="page1.html" class="footer-link">Пройти тест</a>
+            <a href="#" class="footer-link">ссылка на страницу</a>
+            <a href="#" class="footer-link">ссылка на страницу</a>
+        </div>
+    </footer>
+</div>
+    <script src="script.js"></script>
+
+</body>
+</html>
