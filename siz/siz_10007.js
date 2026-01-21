@@ -1,8 +1,8 @@
-// siz_10010.js
+// siz_100007.js
 window.SIZ_DATA = window.SIZ_DATA || {};
 
-window.SIZ_DATA["10010"] = {
-  professionCode: "10010",
+window.SIZ_DATA["100007"] = {
+  professionCode: "100007",
   professionName: "Авиационный техник (механик) по парашютным и аварийно-спасательным средствам",
   types: [
     {
