@@ -1,7 +1,7 @@
-// siz_100001.js
+// siz_1.js
 window.SIZ_DATA = window.SIZ_DATA || {};
 
-window.SIZ_DATA["100001"] = {
+window.SIZ_DATA["1"] = {
   professionCode: "100001",
   professionName: "Авербандщик",
   types: [

@@ -1,17 +1,17 @@
-// siz_100007.js
+// siz_2.js
 window.SIZ_DATA = window.SIZ_DATA || {};
 
-window.SIZ_DATA["100007"] = {
-  professionCode: "100007",
-  professionName: "Авиационный техник (механик) по парашютным и аварийно-спасательным средствам",
+window.SIZ_DATA["2"] = {
+  // professionCode: "100003",
+  professionName: "Авиационный механик (техник) по планеру и двигателям",
   types: [
     {
       typeId: "clothes",
       typeName: "Одежда специальная защитная",
       items: [
         {
-          itemId: "kostyum_mech",
-          name: "Костюм для защиты от механических воздействий",
+          itemId: "kostyum_maslo",
+          name: "Костюм для защиты от нефтепродуктов",
           norm: { value: 1, unit: "шт", period: "год" }
         }
       ]
@@ -21,8 +21,8 @@ window.SIZ_DATA["100007"] = {
       typeName: "Средства защиты ног",
       items: [
         {
-          itemId: "obuv_mech",
-          name: "Обувь специальная для защиты от механических воздействий",
+          itemId: "obuv_maslo",
+          name: "Обувь специальная для защиты от нефтепродуктов",
           norm: { value: 1, unit: "пара", period: "год" }
         }
       ]
@@ -32,9 +32,20 @@ window.SIZ_DATA["100007"] = {
       typeName: "Средства защиты рук",
       items: [
         {
-          itemId: "perchatki_mech",
-          name: "Перчатки для защиты от механических воздействий",
+          itemId: "perchatki_maslo",
+          name: "Перчатки для защиты от нефтепродуктов",
           norm: { value: 12, unit: "пар", period: "год" }
+        }
+      ]
+    },
+    {
+      typeId: "eyes",
+      typeName: "Средства защиты глаз",
+      items: [
+        {
+          itemId: "ochki",
+          name: "Очки защитные",
+          norm: { value: 1, unit: "шт", period: "2 года" }
         }
       ]
     },
