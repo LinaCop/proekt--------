@@ -68,18 +68,22 @@ function flattenRequiredItems(profData) {
     items.forEach((it) => {
       const itemId = it.itemId || null;
       const name = it.name || '';
-      const requiredQty = Number(it?.norm?.value || 0);
-      const unit = it?.norm?.unit || '';
-      const period = it?.norm?.period || '';
+    const requiredQty = Number(it?.norm?.value || 0);
+const unit = it?.norm?.unit || '';
+const period = it?.norm?.period || '';
+const note = it?.norm?.note || '';
 
-      out.push({
-        itemId,
-        typeName,
-        name,
-        requiredQty: isFinite(requiredQty) ? requiredQty : 0,
-        unit,
-        period
-      });
+
+out.push({
+  itemId,
+  typeName,
+  name,
+  requiredQty: isFinite(requiredQty) ? requiredQty : 0,
+  unit,
+  period,
+  note
+});
+
     });
   });
 
@@ -213,12 +217,19 @@ function renderRequiredTable(rows) {
         <div class="r-table__row">
           <div class="r-muted">${escapeHtml(r.typeName)}</div>
           <div>${escapeHtml(r.name)}</div>
-          <div class="r-right"><span class="r-chip">${r.requiredQty} ${escapeHtml(r.unit || '')}</span></div>
+          <div class="r-right">
+            ${
+              r.note
+                ? `<span class="r-chip r-muted">${escapeHtml(r.note)}</span>`
+                : `<span class="r-chip">${r.requiredQty} ${escapeHtml(r.unit || '')}</span>`
+            }
+          </div>
         </div>
       `).join('')}
     </div>
   `;
 }
+
 
 function renderDeficitList(items) {
   return `
