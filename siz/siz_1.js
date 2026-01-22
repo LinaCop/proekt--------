@@ -2,7 +2,7 @@
 window.SIZ_DATA = window.SIZ_DATA || {};
 
 window.SIZ_DATA["1"] = {
-  professionCode: "100001",
+  // professionCode: "100001",
   professionName: "Авербандщик",
   types: [
     {

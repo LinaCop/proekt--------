@@ -40,11 +40,25 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // --- Professions: dropdown with full list + search inside (PrimeVue-like) ---
-  const professions = (window.PROFESSIONS || []).map(p => ({
-    code: String(p.code),
-    name: String(p.name || ''),
-    label: `${p.code} — ${p.name}`
-  }));
+  const sizByName = new Map(
+    Object.entries(window.SIZ_DATA || {}).map(([key, value]) => ([
+      normalize(value?.professionName),
+      String(key)
+    ]))
+  );
+
+  const professions = (window.PROFESSIONS || []).map((p, index) => {
+    const name = String(p.name || '');
+    const matched = sizByName.get(normalize(name));
+    const fallbackCode = String(index + 1);
+    const code = matched || fallbackCode;
+
+    return {
+      code,
+      name,
+      label: name
+    };
+  });
 
   function loadProfessions() {
     // Заполняем скрытый select, чтобы значение всегда было в одном месте
@@ -92,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const filtered = !q
       ? professions
       : professions.filter(p =>
-          normalize(p.code).includes(q) ||
+          // normalize(p.code).includes(q) ||
           normalize(p.name).includes(q) ||
           normalize(p.label).includes(q)
         );
@@ -108,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data-code="${esc(p.code)}"
               role="option">
         <span class="pselect__optionName">${esc(p.name)}</span>
-        <span class="pselect__optionCode">${esc(p.code)}</span>
+
       </button>
     `).join('');
   }
