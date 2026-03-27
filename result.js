@@ -55,16 +55,22 @@ function escapeHtml(str) {
   }[s]));
 }
 
-function renderError(msg) {
-  return `
-    <div class="r-card r-card--error">
-      <div class="r-title">Ошибка</div>
-      <div class="r-muted">${escapeHtml(msg)}</div>
+function renderError(msg, lppInfo = null) {
+  const lppSection = lppInfo
+    ? `
+
       <div class="r-block r-block--lpp">
         <div class="r-subtitle">Лечебно-профилактическое питание</div>
         ${renderLppBlock(lppInfo)}
       </div>
+  `
+    : '';
 
+  return `
+    <div class="r-card r-card--error">
+      <div class="r-title">Ошибка</div>
+      <div class="r-muted">${escapeHtml(msg)}</div>
+      ${lppSection}
       <div class="r-actions">
         <a class="r-btn r-btn--ghost" href="page1.html">Вернуться к тесту</a>
       </div>
