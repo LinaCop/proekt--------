@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!root) return;
 
   const rawSiz = window.SIZ;
+  const rawLpp = window.LPP || {};
   if (!rawSiz) {
     root.innerHTML = renderError('Не удалось загрузить нормативные данные. Проверьте файл siz.js.');
     return;
@@ -39,8 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const required = flattenRequiredItems(profData);
   const givenMap = buildGivenMap(test);
   const evaluation = evaluate(required, givenMap);
+  const lppInfo = getLppInfo(rawLpp, profData);
 
-  root.innerHTML = renderResult(profData, evaluation);
+  root.innerHTML = renderResult(profData, evaluation, lppInfo);
 });
 
 function escapeHtml(str) {
@@ -58,6 +60,11 @@ function renderError(msg) {
     <div class="r-card r-card--error">
       <div class="r-title">Ошибка</div>
       <div class="r-muted">${escapeHtml(msg)}</div>
+      <div class="r-block r-block--lpp">
+        <div class="r-subtitle">Лечебно-профилактическое питание</div>
+        ${renderLppBlock(lppInfo)}
+      </div>
+
       <div class="r-actions">
         <a class="r-btn r-btn--ghost" href="page1.html">Вернуться к тесту</a>
       </div>
@@ -203,7 +210,23 @@ function evaluate(requiredItems, givenMap) {
   return { total, okCount, badCount, rows, deficits };
 }
 
-function renderResult(profData, evaluation) {
+function getLppInfo(rawLpp, profData) {
+  const byCode = rawLpp ? rawLpp[String(profData?.professionCode || '')] : null;
+
+  if (byCode?.text) {
+    return {
+      text: String(byCode.text).trim(),
+      source: byCode.profession_name || profData?.professionName || ''
+    };
+  }
+
+  return {
+    text: 'Информация по лечебно-профилактическому питанию для данной профессии не найдена.',
+    source: ''
+  };
+}
+
+function renderResult(profData, evaluation, lppInfo) {
   const title = `${escapeHtml(profData.professionCode || '')} — ${escapeHtml(profData.professionName || 'Профессия')}`;
   const statusText = evaluation.badCount === 0 ? 'Обеспечение достаточное' : 'Обеспечение недостаточное';
 
@@ -235,6 +258,11 @@ function renderResult(profData, evaluation) {
         }
       </div>
 
+      <div class="r-block r-block--lpp">
+        <div class="r-subtitle">Лечебно-профилактическое питание</div>
+        ${renderLppBlock(lppInfo)}
+      </div>
+
       <div class="r-actions">
         <a class="r-btn r-btn--ghost" href="page1.html">Пройти заново</a>
       </div>
@@ -264,6 +292,21 @@ function renderRequiredTable(rows) {
           </div>
         </div>
       `).join('')}
+    </div>
+  `;
+}
+
+
+function renderLppBlock(lppInfo) {
+  const safeText = escapeHtml(lppInfo?.text || 'Информация по лечебно-профилактическому питанию отсутствует.');
+  const isDefault = /не найдена|отсутствует/i.test(String(lppInfo?.text || ''));
+
+  return `
+    <div class="r-lpp ${isDefault ? 'r-lpp--muted' : ''}">
+      <div class="r-lpp__icon" aria-hidden="true">🍽️</div>
+      <div class="r-lpp__content">
+        <div class="r-lpp__text">${safeText}</div>
+      </div>
     </div>
   `;
 }

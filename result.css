@@ -216,3 +216,40 @@
     text-align: left;
   }
 }
+
+
+.r-block--lpp {
+  margin-top: 18px;
+}
+
+.r-lpp {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid var(--r-border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f7fcff 0%, #ffffff 100%);
+}
+
+.r-lpp__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--r-soft);
+}
+
+.r-lpp__text {
+  color: var(--r-text);
+  line-height: 1.55;
+}
+
+.r-lpp--muted .r-lpp__text {
+  color: var(--r-muted);
+}
+
