@@ -1,7 +1,14 @@
-// result.js
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('resultContainer');
   if (!root) return;
+
+  const rawSiz = window.SIZ;
+  if (!rawSiz) {
+    root.innerHTML = renderError('Не удалось загрузить нормативные данные. Проверьте файл siz.js.');
+    return;
+  }
+
+  const prepared = transformJsonToInternal(rawSiz);
 
   const raw = localStorage.getItem('TEST_RESULT');
   if (!raw) {
@@ -17,13 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  const profCode = test?.profCode || localStorage.getItem('PROF_CODE');
+  const profCode = String(test?.profCode || localStorage.getItem('PROF_CODE') || '');
   if (!profCode) {
     root.innerHTML = renderError('Не удалось определить профессию.');
     return;
   }
 
-  const profData = window.SIZ_DATA?.[profCode];
+  const profData = prepared.transformed[profCode];
   if (!profData) {
     root.innerHTML = renderError(`Нет нормативных данных СИЗ для профессии ${escapeHtml(profCode)}.`);
     return;
@@ -36,12 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
   root.innerHTML = renderResult(profData, evaluation);
 });
 
-/* =========================
-   Helpers
-   ========================= */
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (s) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
   }[s]));
 }
 
@@ -50,13 +58,68 @@ function renderError(msg) {
     <div class="r-card r-card--error">
       <div class="r-title">Ошибка</div>
       <div class="r-muted">${escapeHtml(msg)}</div>
+      <div class="r-actions">
+        <a class="r-btn r-btn--ghost" href="page1.html">Вернуться к тесту</a>
+      </div>
     </div>
   `;
 }
 
-/* =========================
-   Data normalization
-   ========================= */
+function parseNorm(rawNorm) {
+  const raw = String(rawNorm || '').trim();
+
+  if (!raw) {
+    return {
+      raw: '',
+      value: 0,
+      unit: ''
+    };
+  }
+
+  const match = raw.match(/^(\d+(?:[.,]\d+)?)\s*(.+)$/);
+
+  if (!match) {
+    return {
+      raw,
+      value: 0,
+      unit: raw
+    };
+  }
+
+  return {
+    raw,
+    value: Number(match[1].replace(',', '.')),
+    unit: match[2].trim()
+  };
+}
+
+function transformJsonToInternal(json) {
+  const transformed = {};
+
+  Object.entries(json || {}).forEach(([professionName, professionData], professionIndex) => {
+    const code = String(professionData?.profession_no || professionIndex + 1);
+    const rawTypes = professionData?.types || {};
+
+    const types = Object.entries(rawTypes).map(([typeName, items], typeIndex) => ({
+      typeId: `${code}_${typeIndex + 1}`,
+      typeName,
+      items: (items || []).map((item, itemIndex) => ({
+        itemId: `${code}_${typeIndex + 1}_${itemIndex + 1}`,
+        name: item?.name || '',
+        norm: parseNorm(item?.norm || '')
+      }))
+    }));
+
+    transformed[code] = {
+      professionCode: code,
+      professionName,
+      types
+    };
+  });
+
+  return { transformed };
+}
+
 function flattenRequiredItems(profData) {
   const out = [];
   const types = Array.isArray(profData.types) ? profData.types : [];
@@ -66,35 +129,20 @@ function flattenRequiredItems(profData) {
     const items = Array.isArray(t.items) ? t.items : [];
 
     items.forEach((it) => {
-      const itemId = it.itemId || null;
-      const name = it.name || '';
-    const requiredQty = Number(it?.norm?.value || 0);
-const unit = it?.norm?.unit || '';
-const period = it?.norm?.period || '';
-const note = it?.norm?.note || '';
-
-
-out.push({
-  itemId,
-  typeName,
-  name,
-  requiredQty: isFinite(requiredQty) ? requiredQty : 0,
-  unit,
-  period,
-  note
-});
-
+      out.push({
+        itemId: it.itemId || null,
+        typeName,
+        name: it.name || '',
+        requiredQty: Number(it?.norm?.value || 0),
+        unit: it?.norm?.unit || '',
+        rawNorm: it?.norm?.raw || ''
+      });
     });
   });
 
   return out;
 }
 
-/**
- * Поддерживаем 2 случая:
- * 1) если page1.js сохраняет itemId -> используем itemId
- * 2) если itemId нет -> пытаемся вытащить из itemKey (после "__item__")
- */
 function buildGivenMap(test) {
   const map = new Map();
   const items = test?.selected?.items || [];
@@ -118,9 +166,6 @@ function buildGivenMap(test) {
   return map;
 }
 
-/* =========================
-   Evaluation
-   ========================= */
 function evaluate(requiredItems, givenMap) {
   const rows = requiredItems.map((r) => {
     const key = String(r.itemId || '');
@@ -134,42 +179,32 @@ function evaluate(requiredItems, givenMap) {
       givenQty,
       ok,
       deficit,
-      // нужно для текста "вообще не указал"
       notSpecified: !givenMap.has(key)
     };
   });
 
   const total = rows.length;
-  const okCount = rows.filter(x => x.ok).length;
+  const okCount = rows.filter((x) => x.ok).length;
   const badCount = total - okCount;
 
-  // список недостатков
-  const недостатки = rows
-    .filter(x => !x.ok)
-    .map(x => ({
+  const deficits = rows
+    .filter((x) => !x.ok)
+    .map((x) => ({
       name: x.name,
       typeName: x.typeName,
       requiredQty: x.requiredQty,
       unit: x.unit,
+      rawNorm: x.rawNorm,
       givenQty: x.givenQty,
       deficit: x.deficit,
       notSpecified: x.notSpecified
     }));
 
-  return { total, okCount, badCount, rows, недостатки };
+  return { total, okCount, badCount, rows, deficits };
 }
 
-
-/* =========================
-   Rendering
-   ========================= */
 function renderResult(profData, evaluation) {
   const title = `${escapeHtml(profData.professionCode || '')} — ${escapeHtml(profData.professionName || 'Профессия')}`;
-
-  const orderText = profData.orderText
-    ? escapeHtml(profData.orderText)
-    : 'действующими нормами обеспечения работников средствами индивидуальной защиты';
-
   const statusText = evaluation.badCount === 0 ? 'Обеспечение достаточное' : 'Обеспечение недостаточное';
 
   return `
@@ -178,12 +213,14 @@ function renderResult(profData, evaluation) {
 
       <div class="r-status ${evaluation.badCount === 0 ? 'is-ok' : 'is-bad'}">
         <div class="r-status__main">${escapeHtml(statusText)}</div>
-        <div class="r-status__sub">Проверено позиций: ${evaluation.total}. Несоответствий: ${evaluation.badCount}.</div>
+        <div class="r-status__sub">
+          Проверено позиций: ${evaluation.total}. Несоответствий: ${evaluation.badCount}.
+        </div>
       </div>
 
       <div class="r-block">
         <div class="r-text">
-          В связи с <b>${orderText}</b> работодатель должен обеспечить вас следующими СИЗ:
+          Для выбранной профессии предусмотрены следующие СИЗ:
         </div>
 
         ${renderRequiredTable(evaluation.rows)}
@@ -192,9 +229,9 @@ function renderResult(profData, evaluation) {
       <div class="r-block">
         <div class="r-subtitle">Недостаточное обеспечение по вашим ответам</div>
 
-        ${evaluation.недостатки.length === 0
+        ${evaluation.deficits.length === 0
           ? `<div class="r-okline">По вашим ответам недостатков не выявлено.</div>`
-          : renderDeficitList(evaluation.недостатки)
+          : renderDeficitList(evaluation.deficits)
         }
       </div>
 
@@ -211,18 +248,19 @@ function renderRequiredTable(rows) {
       <div class="r-table__head">
         <div>Тип</div>
         <div>Наименование СИЗ</div>
-        <div class="r-right">Количество</div>
+        <div class="r-right">Норма</div>
+        <div class="r-right">Указано вами</div>
       </div>
-      ${rows.map(r => `
+
+      ${rows.map((r) => `
         <div class="r-table__row">
           <div class="r-muted">${escapeHtml(r.typeName)}</div>
           <div>${escapeHtml(r.name)}</div>
           <div class="r-right">
-            ${
-              r.note
-                ? `<span class="r-chip r-muted">${escapeHtml(r.note)}</span>`
-                : `<span class="r-chip">${r.requiredQty} ${escapeHtml(r.unit || '')}</span>`
-            }
+            <span class="r-chip">${escapeHtml(r.rawNorm || `${r.requiredQty} ${r.unit}`)}</span>
+          </div>
+          <div class="r-right">
+            <span class="r-chip ${r.ok ? '' : 'r-chip--bad'}">${r.givenQty} ${escapeHtml(r.unit || '')}</span>
           </div>
         </div>
       `).join('')}
@@ -230,11 +268,10 @@ function renderRequiredTable(rows) {
   `;
 }
 
-
 function renderDeficitList(items) {
   return `
     <div class="r-deficits">
-      ${items.map(x => `
+      ${items.map((x) => `
         <div class="r-deficit">
           <div class="r-deficit__title">${escapeHtml(x.name)}</div>
           <div class="r-deficit__meta">
@@ -245,11 +282,11 @@ function renderDeficitList(items) {
             x.notSpecified
               ? `<div class="r-deficit__line">
                    <span class="r-badge r-badge--bad">Не указано</span>
-                   Требуется: <b>${x.requiredQty} ${escapeHtml(x.unit || '')}</b>.
+                   Требуется: <b>${escapeHtml(x.rawNorm || `${x.requiredQty} ${x.unit}`)}</b>.
                  </div>`
               : `<div class="r-deficit__line">
                    Указано: <b>${x.givenQty} ${escapeHtml(x.unit || '')}</b>.
-                   Требуется: <b>${x.requiredQty} ${escapeHtml(x.unit || '')}</b>.
+                   Требуется: <b>${escapeHtml(x.rawNorm || `${x.requiredQty} ${x.unit}`)}</b>.
                    <span class="r-badge r-badge--bad">Не хватает: ${x.deficit} ${escapeHtml(x.unit || '')}</span>
                  </div>`
           }
@@ -259,5 +296,14 @@ function renderDeficitList(items) {
   `;
 }
 
+const burger = document.getElementById('burger');
+const menu = document.getElementById('sideMenu');
+const page = document.querySelector('.page');
 
-
+if (burger && menu && page) {
+  burger.addEventListener('click', () => {
+    menu.classList.toggle('open');
+    page.classList.toggle('shift');
+    burger.classList.toggle('active');
+  });
+}

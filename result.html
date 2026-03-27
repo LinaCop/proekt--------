@@ -3,30 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <title>Результаты теста СИЗ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="result.css" />
 </head>
 <body>
+  <nav class="side-menu" id="sideMenu">
+    <div class="side-menu__header">Меню</div>
+    <a href="index.html" class="side-menu__item side-menu__item--active">Главная</a>
+    <a href="page1.html" class="side-menu__item">Пройти тест</a>
+    <a href="page2.html" class="side-menu__item">Нормативная документация</a>
+    <a href="#" class="side-menu__item">Контакты</a>
 
-  <!-- меню/шапку можешь оставить как на page1.html,
-       тут минимальный контейнер результата -->
+    <div class="side-menu__footer">
+      © 2025<br />
+      ПрофЗдоровье
+    </div>
+  </nav>
+
   <div class="page">
+    <div class="top-row">
+      <div class="burger" id="burger">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="site-title">Твое профессиональное здоровье РФ</div>
+    </div>
+
+    <div class="divider"></div>
+
     <div class="test-page">
       <div id="resultContainer"></div>
     </div>
   </div>
 
-  <!-- 💾 Данные (важно: чтобы result.js мог взять норму из SIZ_DATA) -->
-  <script src="professions.js"></script>
-  <script src="siz/siz_1.js"></script>
-  <script src="siz/siz_2.js"></script>
-  <script src="siz/siz_3.js"></script>
-  <script src="siz/siz_5.js"></script>
-
-  <!-- ⚙️ Логика -->
+  <script src="siz.js"></script>
   <script src="result.js"></script>
 </body>
 </html>
-
-

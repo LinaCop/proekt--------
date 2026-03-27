@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>Тест СИЗ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="page1.css" />
-
 </head>
 
 <body>
-  <!-- менюшка слева -->
   <nav class="side-menu" id="sideMenu">
     <div class="side-menu__header">Меню</div>
     <a href="index.html" class="side-menu__item side-menu__item--active">Главная</a>
@@ -25,7 +24,6 @@
   </nav>
 
   <div class="page">
-    <!-- верх -->
     <div class="top-row">
       <div class="burger" id="burger">
         <span></span><span></span><span></span>
@@ -36,11 +34,9 @@
 
     <div class="divider"></div>
 
-    <!-- контент страницы -->
     <div class="test-page">
       <h1 class="test-title">Подбор средств индивидуальной защиты</h1>
 
-      <!-- PrimeVue-like select: dropdown со всем списком + поиск внутри -->
       <label class="test-label">Выберите профессию:</label>
 
       <div class="pselect" id="professionPicker">
@@ -69,13 +65,12 @@
           <div class="pselect__list" id="pselectList" role="listbox"></div>
         </div>
 
-        <!-- select оставляем (скрытый): в нем хранится выбранный код, чтобы не ломать логику -->
         <select id="professionSelect" class="test-select" style="display: none;">
           <option value="">-- Выберите --</option>
         </select>
 
         <div class="profession-picker__hint">
-          Например: <span class="chip">100003</span> или <span class="chip">механик</span>
+          Например: <span class="chip">1799</span> или <span class="chip">лаборант</span>
         </div>
       </div>
 
@@ -96,14 +91,7 @@
     </div>
   </div>
 
-  <!-- 💾 Данные -->
-  <script src="professions.js"></script>
-  <script src="siz/siz_5.js"></script>
-  <script src="siz/siz_3.js"></script>
-  <script src="siz/siz_2.js"></script>
-  <script src="siz/siz_1.js"></script>
-
-  <!-- ⚙️ Логика -->
+  <script src="siz.js"></script>
   <script src="page1.js"></script>
 </body>
 </html>
